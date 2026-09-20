@@ -1,0 +1,2565 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="theme-color"
+        content="#000000"
+    >
+
+    <title>Clicker</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+
+        html {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+
+        body {
+            margin: 0;
+            padding: 20px;
+
+            min-height: 100vh;
+
+            background: #000000;
+            color: #ffffff;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "SF Pro Display",
+                "Segoe UI",
+                sans-serif;
+
+            user-select: none;
+            -webkit-user-select: none;
+
+            overflow-x: hidden;
+        }
+
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+
+        button {
+            touch-action: manipulation;
+        }
+
+
+        /* ========================= */
+        /* HEADER */
+        /* ========================= */
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .title {
+            margin: 0;
+
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+
+        /* ========================= */
+        /* SELECTOR НАБОРОВ */
+        /* ========================= */
+
+        .set-selector {
+            display: flex;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .set-select {
+            flex: 1;
+
+            height: 50px;
+
+            padding: 0 15px;
+
+            border: 1px solid #38383a;
+            border-radius: 14px;
+
+            background: #1c1c1e;
+            color: #ffffff;
+
+            font-size: 16px;
+
+            outline: none;
+        }
+
+
+        .icon-button {
+            width: 50px;
+            height: 50px;
+
+            border: none;
+            border-radius: 14px;
+
+            background: #2c2c2e;
+            color: #ffffff;
+
+            font-size: 24px;
+
+            cursor: pointer;
+        }
+
+
+        .icon-button:active {
+            transform: scale(0.94);
+            opacity: 0.7;
+        }
+
+
+        /* ========================= */
+        /* ИНФОРМАЦИЯ О НАБОРЕ */
+        /* ========================= */
+
+        .set-info {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 15px;
+
+            color: #8e8e93;
+
+            font-size: 14px;
+        }
+
+
+        /* ========================= */
+        /* КНОПКИ */
+        /* ========================= */
+
+        .buttons-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 15px;
+
+        }
+
+
+        .button-container {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+        }
+
+
+        .click-button {
+
+            width: 100%;
+            min-height: 85px;
+
+            padding: 10px;
+
+            border: none;
+            border-radius: 18px;
+
+            font-size: 18px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.07s,
+                opacity 0.07s;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.35);
+
+            user-select: none;
+            -webkit-user-select: none;
+
+        }
+
+
+        .click-button:active {
+
+            transform: scale(0.94);
+
+            opacity: 0.8;
+
+        }
+
+
+        .counter {
+
+            margin-top: 7px;
+
+            font-size: 20px;
+            font-weight: 600;
+
+            color: #ffffff;
+
+        }
+
+
+        /* ========================= */
+        /* НИЖНИЕ КНОПКИ */
+        /* ========================= */
+
+        .actions {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin-top: 30px;
+
+        }
+
+
+        .action-button {
+
+            width: 100%;
+            min-height: 52px;
+
+            border: none;
+            border-radius: 15px;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+        }
+
+
+        .export-button {
+
+            background: #0a84ff;
+            color: #ffffff;
+
+        }
+
+
+        .reset-button {
+
+            background: #2c2c2e;
+            color: #ff453a;
+
+        }
+
+
+        .manage-button {
+
+            background: #2c2c2e;
+            color: #ffffff;
+
+        }
+
+
+        .action-button:active {
+
+            transform: scale(0.98);
+            opacity: 0.7;
+
+        }
+
+
+        /* ========================= */
+        /* MODAL */
+        /* ========================= */
+
+        .modal {
+
+            display: none;
+
+            position: fixed;
+
+            z-index: 1000;
+
+            inset: 0;
+
+            padding: 20px;
+
+            background:
+                rgba(0, 0, 0, 0.72);
+
+            align-items: center;
+            justify-content: center;
+
+        }
+
+
+        .modal.active {
+
+            display: flex;
+
+        }
+
+
+        .modal-box {
+
+            width: 100%;
+            max-width: 400px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding: 24px;
+
+            border-radius: 22px;
+
+            background: #2c2c2e;
+
+            box-shadow:
+                0 15px 50px rgba(0, 0, 0, 0.5);
+
+        }
+
+
+        .modal-title {
+
+            margin-bottom: 20px;
+
+            font-size: 21px;
+            font-weight: 700;
+
+        }
+
+
+        .modal-text {
+
+            margin-bottom: 20px;
+
+            color: #b8b8bd;
+
+            line-height: 1.45;
+
+        }
+
+
+        .modal-buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .modal-button {
+
+            flex: 1;
+
+            min-height: 48px;
+
+            border: none;
+            border-radius: 13px;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+        }
+
+
+        .cancel-button {
+
+            background: #48484a;
+            color: #ffffff;
+
+        }
+
+
+        .danger-button {
+
+            background: #ff453a;
+            color: #ffffff;
+
+        }
+
+
+        .blue-button {
+
+            background: #0a84ff;
+            color: #ffffff;
+
+        }
+
+
+        /* ========================= */
+        /* FORM */
+        /* ========================= */
+
+        .form-group {
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .form-label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #b8b8bd;
+
+            font-size: 14px;
+
+        }
+
+
+        .form-input {
+
+            width: 100%;
+
+            height: 48px;
+
+            padding: 0 13px;
+
+            border: 1px solid #48484a;
+            border-radius: 12px;
+
+            background: #1c1c1e;
+            color: #ffffff;
+
+            font-size: 16px;
+
+            outline: none;
+
+        }
+
+
+        .form-input:focus {
+
+            border-color: #0a84ff;
+
+        }
+
+
+        .color-row {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        .color-input {
+
+            flex: 1;
+
+            height: 48px;
+
+            padding: 3px;
+
+            border: 1px solid #48484a;
+            border-radius: 12px;
+
+            background: #1c1c1e;
+
+        }
+
+
+        /* ========================= */
+        /* СПИСОК КНОПОК В НАСТРОЙКАХ */
+        /* ========================= */
+
+        .button-settings-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+        }
+
+
+        .button-setting {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 10px;
+
+            border-radius: 14px;
+
+            background: #1c1c1e;
+
+        }
+
+
+        .button-preview {
+
+            width: 42px;
+            height: 42px;
+
+            flex-shrink: 0;
+
+            border-radius: 10px;
+
+        }
+
+
+        .button-setting-name {
+
+            flex: 1;
+
+            min-width: 0;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+        }
+
+
+        .small-button {
+
+            width: 40px;
+            height: 40px;
+
+            flex-shrink: 0;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #3a3a3c;
+            color: #ffffff;
+
+            cursor: pointer;
+
+        }
+
+
+        .small-button.delete {
+
+            color: #ff453a;
+
+        }
+
+
+        /* ========================= */
+        /* EXPORT */
+        /* ========================= */
+
+        .export-preview {
+
+            width: 100%;
+
+            min-height: 180px;
+
+            padding: 15px;
+
+            border: 1px solid #48484a;
+            border-radius: 12px;
+
+            background: #1c1c1e;
+            color: #ffffff;
+
+            font-family: monospace;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            white-space: pre-wrap;
+
+            user-select: text;
+            -webkit-user-select: text;
+
+        }
+
+
+        /* ========================= */
+        /* TOAST */
+        /* ========================= */
+
+        .toast {
+
+            position: fixed;
+
+            z-index: 2000;
+
+            left: 50%;
+            bottom: 30px;
+
+            transform:
+                translateX(-50%)
+                translateY(20px);
+
+            padding: 12px 18px;
+
+            border-radius: 14px;
+
+            background: rgba(44, 44, 46, 0.95);
+
+            color: #ffffff;
+
+            font-size: 15px;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition:
+                opacity 0.2s,
+                transform 0.2s;
+
+            white-space: nowrap;
+
+        }
+
+
+        .toast.show {
+
+            opacity: 1;
+
+            transform:
+                translateX(-50%)
+                translateY(0);
+
+        }
+
+
+        /* ========================= */
+        /* АДАПТИВ */
+        /* ========================= */
+
+        @media (min-width: 700px) {
+
+            body {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+
+            .buttons-grid {
+
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+
+            }
+
+        }
+
+
+        @media (max-width: 400px) {
+
+            body {
+                padding: 15px;
+            }
+
+
+            .click-button {
+                min-height: 75px;
+                font-size: 16px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ========================= -->
+<!-- HEADER -->
+<!-- ========================= -->
+
+<div class="header">
+
+    <h1 class="title">
+        Clicker
+    </h1>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- ВЫБОР НАБОРА -->
+<!-- ========================= -->
+
+<div class="set-selector">
+
+    <select
+        id="setSelect"
+        class="set-select"
+        onchange="changeSet()"
+    ></select>
+
+
+    <button
+        class="icon-button"
+        onclick="openSetManager()"
+        title="Управление наборами"
+    >
+        ⚙
+    </button>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- ИНФОРМАЦИЯ -->
+<!-- ========================= -->
+
+<div class="set-info">
+
+    <span id="buttonCount">
+        0 кнопок
+    </span>
+
+    <span id="totalCount">
+        Всего: 0
+    </span>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- КНОПКИ -->
+<!-- ========================= -->
+
+<div
+    id="buttonsGrid"
+    class="buttons-grid"
+></div>
+
+
+<!-- ========================= -->
+<!-- ДЕЙСТВИЯ -->
+<!-- ========================= -->
+
+<div class="actions">
+
+    <button
+        class="action-button export-button"
+        onclick="exportData()"
+    >
+        Выгрузить и скопировать
+    </button>
+
+
+    <button
+        class="action-button reset-button"
+        onclick="showResetDialog()"
+    >
+        Сбросить счётчики
+    </button>
+
+
+    <button
+        class="action-button manage-button"
+        onclick="openButtonManager()"
+    >
+        Настроить кнопки
+    </button>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MODAL: СБРОС -->
+<!-- ========================= -->
+
+<div
+    id="resetModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Сбросить счётчики?
+        </div>
+
+
+        <div class="modal-text">
+
+            Все счётчики текущего набора
+            будут установлены в 0.
+
+            Это действие нельзя отменить.
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeModal('resetModal')"
+            >
+                Отмена
+            </button>
+
+
+            <button
+                class="modal-button danger-button"
+                onclick="confirmReset()"
+            >
+                Сбросить
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MODAL: НАБОРЫ -->
+<!-- ========================= -->
+
+<div
+    id="setManagerModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Управление наборами
+        </div>
+
+
+        <div id="setsList"></div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeModal('setManagerModal')"
+            >
+                Закрыть
+            </button>
+
+
+            <button
+                class="modal-button blue-button"
+                onclick="createSet()"
+            >
+                + Новый набор
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MODAL: КНОПКИ -->
+<!-- ========================= -->
+
+<div
+    id="buttonManagerModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Кнопки текущего набора
+        </div>
+
+
+        <div
+            id="buttonSettingsList"
+            class="button-settings-list"
+        ></div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeModal('buttonManagerModal')"
+            >
+                Закрыть
+            </button>
+
+
+            <button
+                class="modal-button blue-button"
+                onclick="addButton()"
+            >
+                + Добавить
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MODAL: ДОБАВЛЕНИЕ КНОПКИ -->
+<!-- ========================= -->
+
+<div
+    id="addButtonModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Новая кнопка
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Название
+            </label>
+
+            <input
+                id="newButtonName"
+                class="form-input"
+                type="text"
+                placeholder="Название кнопки"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Цвет кнопки
+            </label>
+
+            <input
+                id="newButtonBackground"
+                class="color-input"
+                type="color"
+                value="#007AFF"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Цвет текста
+            </label>
+
+            <input
+                id="newButtonTextColor"
+                class="color-input"
+                type="color"
+                value="#FFFFFF"
+            >
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeModal('addButtonModal')"
+            >
+                Отмена
+            </button>
+
+
+            <button
+                class="modal-button blue-button"
+                onclick="saveNewButton()"
+            >
+                Добавить
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MODAL: СОЗДАНИЕ НАБОРА -->
+<!-- ========================= -->
+
+<div
+    id="newSetModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Новый набор
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Название набора
+            </label>
+
+            <input
+                id="newSetName"
+                class="form-input"
+                type="text"
+                placeholder="Например: Мероприятие 1"
+            >
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeModal('newSetModal')"
+            >
+                Отмена
+            </button>
+
+
+            <button
+                class="modal-button blue-button"
+                onclick="saveNewSet()"
+            >
+                Создать
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MODAL: EXPORT -->
+<!-- ========================= -->
+
+<div
+    id="exportModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Результат
+        </div>
+
+
+        <textarea
+            id="exportText"
+            class="export-preview"
+            readonly
+        ></textarea>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button cancel-button"
+                onclick="closeModal('exportModal')"
+            >
+                Закрыть
+            </button>
+
+
+            <button
+                class="modal-button blue-button"
+                onclick="copyExport()"
+            >
+                Копировать
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- TOAST -->
+<!-- ========================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script>
+
+
+// ======================================================
+// STORAGE
+// ======================================================
+
+const STORAGE_KEY = "clicker_data_v1";
+
+
+let state = loadState();
+
+
+function loadState() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                STORAGE_KEY
+            );
+
+
+        if (saved) {
+
+            const data =
+                JSON.parse(saved);
+
+
+            if (
+                data &&
+                Array.isArray(data.sets) &&
+                data.sets.length > 0
+            ) {
+
+                return data;
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ошибка загрузки:",
+            error
+        );
+
+    }
+
+
+    return createDefaultState();
+
+}
+
+
+function saveState() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+    );
+
+}
+
+
+// ======================================================
+// СОЗДАНИЕ НАЧАЛЬНЫХ ДАННЫХ
+// ======================================================
+
+function createDefaultState() {
+
+    return {
+
+        currentSetId: "default",
+
+        sets: [
+
+            {
+
+                id: "default",
+
+                name: "Основной набор",
+
+                buttons: [
+
+                    {
+                        id: "button_1",
+                        name: "Кнопка 1",
+                        backgroundColor: "#FF3B30",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_2",
+                        name: "Кнопка 2",
+                        backgroundColor: "#FF9500",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_3",
+                        name: "Кнопка 3",
+                        backgroundColor: "#FFCC00",
+                        textColor: "#000000",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_4",
+                        name: "Кнопка 4",
+                        backgroundColor: "#34C759",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_5",
+                        name: "Кнопка 5",
+                        backgroundColor: "#30D158",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_6",
+                        name: "Кнопка 6",
+                        backgroundColor: "#00C7BE",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_7",
+                        name: "Кнопка 7",
+                        backgroundColor: "#32ADE6",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_8",
+                        name: "Кнопка 8",
+                        backgroundColor: "#007AFF",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_9",
+                        name: "Кнопка 9",
+                        backgroundColor: "#5856D6",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    },
+
+                    {
+                        id: "button_10",
+                        name: "Кнопка 10",
+                        backgroundColor: "#AF52DE",
+                        textColor: "#FFFFFF",
+                        count: 0
+                    }
+
+                ]
+
+            }
+
+        ]
+
+    };
+
+}
+
+
+// ======================================================
+// ТЕКУЩИЙ НАБОР
+// ======================================================
+
+function getCurrentSet() {
+
+    return state.sets.find(
+        set =>
+            set.id === state.currentSetId
+    );
+
+}
+
+
+// ======================================================
+// РЕНДЕР
+// ======================================================
+
+function render() {
+
+    renderSetSelector();
+
+    renderButtons();
+
+    updateInfo();
+
+}
+
+
+// ======================================================
+// SELECT НАБОРОВ
+// ======================================================
+
+function renderSetSelector() {
+
+    const select =
+        document.getElementById(
+            "setSelect"
+        );
+
+
+    select.innerHTML = "";
+
+
+    state.sets.forEach(set => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            set.id;
+
+
+        option.textContent =
+            set.name;
+
+
+        option.selected =
+            set.id ===
+            state.currentSetId;
+
+
+        select.appendChild(
+            option
+        );
+
+    });
+
+}
+
+
+// ======================================================
+// ПЕРЕКЛЮЧЕНИЕ НАБОРА
+// ======================================================
+
+function changeSet() {
+
+    const select =
+        document.getElementById(
+            "setSelect"
+        );
+
+
+    state.currentSetId =
+        select.value;
+
+
+    saveState();
+
+    render();
+
+}
+
+
+// ======================================================
+// РЕНДЕР КНОПОК
+// ======================================================
+
+function renderButtons() {
+
+    const grid =
+        document.getElementById(
+            "buttonsGrid"
+        );
+
+
+    const currentSet =
+        getCurrentSet();
+
+
+    grid.innerHTML = "";
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    currentSet.buttons.forEach(
+        button => {
+
+            const container =
+                document.createElement(
+                    "div"
+                );
+
+
+            container.className =
+                "button-container";
+
+
+            const element =
+                document.createElement(
+                    "button"
+                );
+
+
+            element.className =
+                "click-button";
+
+
+            element.textContent =
+                button.name;
+
+
+            element.style.backgroundColor =
+                button.backgroundColor;
+
+
+            element.style.color =
+                button.textColor;
+
+
+            element.addEventListener(
+                "click",
+                () => {
+
+                    incrementButton(
+                        button.id
+                    );
+
+                }
+            );
+
+
+            const counter =
+                document.createElement(
+                    "div"
+                );
+
+
+            counter.className =
+                "counter";
+
+
+            counter.id =
+                "count-" +
+                button.id;
+
+
+            counter.textContent =
+                button.count;
+
+
+            container.appendChild(
+                element
+            );
+
+
+            container.appendChild(
+                counter
+            );
+
+
+            grid.appendChild(
+                container
+            );
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// УВЕЛИЧЕНИЕ СЧЁТЧИКА
+// ======================================================
+
+function incrementButton(id) {
+
+    const currentSet =
+        getCurrentSet();
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    const button =
+        currentSet.buttons.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    button.count++;
+
+
+    const counter =
+        document.getElementById(
+            "count-" + id
+        );
+
+
+    if (counter) {
+
+        counter.textContent =
+            button.count;
+
+    }
+
+
+    updateInfo();
+
+    saveState();
+
+}
+
+
+// ======================================================
+// ОБЩАЯ СТАТИСТИКА
+// ======================================================
+
+function updateInfo() {
+
+    const currentSet =
+        getCurrentSet();
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    const total =
+        currentSet.buttons.reduce(
+            (sum, button) =>
+                sum + button.count,
+            0
+        );
+
+
+    document.getElementById(
+        "buttonCount"
+    ).textContent =
+        currentSet.buttons.length +
+        " кнопок";
+
+
+    document.getElementById(
+        "totalCount"
+    ).textContent =
+        "Всего: " + total;
+
+}
+
+
+// ======================================================
+// СБРОС
+// ======================================================
+
+function showResetDialog() {
+
+    openModal(
+        "resetModal"
+    );
+
+}
+
+
+function confirmReset() {
+
+    const currentSet =
+        getCurrentSet();
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    currentSet.buttons.forEach(
+        button => {
+
+            button.count = 0;
+
+        }
+    );
+
+
+    saveState();
+
+    render();
+
+    closeModal(
+        "resetModal"
+    );
+
+
+    showToast(
+        "Счётчики сброшены"
+    );
+
+}
+
+
+// ======================================================
+// УПРАВЛЕНИЕ НАБОРАМИ
+// ======================================================
+
+function openSetManager() {
+
+    renderSetsList();
+
+    openModal(
+        "setManagerModal"
+    );
+
+}
+
+
+function renderSetsList() {
+
+    const container =
+        document.getElementById(
+            "setsList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    state.sets.forEach(set => {
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.style.display =
+            "flex";
+
+
+        row.style.alignItems =
+            "center";
+
+
+        row.style.gap =
+            "10px";
+
+
+        row.style.marginBottom =
+            "10px";
+
+
+        row.style.padding =
+            "10px";
+
+
+        row.style.background =
+            "#1c1c1e";
+
+
+        row.style.borderRadius =
+            "12px";
+
+
+        const name =
+            document.createElement(
+                "div"
+            );
+
+
+        name.textContent =
+            set.name;
+
+
+        name.style.flex =
+            "1";
+
+
+        const selectButton =
+            document.createElement(
+                "button"
+            );
+
+
+        selectButton.className =
+            "small-button";
+
+
+        selectButton.textContent =
+            "✓";
+
+
+        selectButton.onclick =
+            () => {
+
+                state.currentSetId =
+                    set.id;
+
+                saveState();
+
+                render();
+
+                closeModal(
+                    "setManagerModal"
+                );
+
+            };
+
+
+        const deleteButton =
+            document.createElement(
+                "button"
+            );
+
+
+        deleteButton.className =
+            "small-button delete";
+
+
+        deleteButton.textContent =
+            "×";
+
+
+        deleteButton.onclick =
+            () => {
+
+                deleteSet(
+                    set.id
+                );
+
+            };
+
+
+        row.appendChild(
+            name
+        );
+
+
+        row.appendChild(
+            selectButton
+        );
+
+
+        if (state.sets.length > 1) {
+
+            row.appendChild(
+                deleteButton
+            );
+
+        }
+
+
+        container.appendChild(
+            row
+        );
+
+    });
+
+}
+
+
+// ======================================================
+// СОЗДАНИЕ НАБОРА
+// ======================================================
+
+function createSet() {
+
+    document.getElementById(
+        "newSetName"
+    ).value = "";
+
+
+    closeModal(
+        "setManagerModal"
+    );
+
+
+    openModal(
+        "newSetModal"
+    );
+
+}
+
+
+function saveNewSet() {
+
+    const input =
+        document.getElementById(
+            "newSetName"
+        );
+
+
+    const name =
+        input.value.trim();
+
+
+    if (!name) {
+
+        showToast(
+            "Введите название"
+        );
+
+        return;
+
+    }
+
+
+    const id =
+        "set_" +
+        Date.now();
+
+
+    state.sets.push({
+
+        id: id,
+
+        name: name,
+
+        buttons: []
+
+    });
+
+
+    state.currentSetId =
+        id;
+
+
+    saveState();
+
+    render();
+
+    closeModal(
+        "newSetModal"
+    );
+
+
+    showToast(
+        "Набор создан"
+    );
+
+}
+
+
+// ======================================================
+// УДАЛЕНИЕ НАБОРА
+// ======================================================
+
+function deleteSet(id) {
+
+    if (state.sets.length <= 1) {
+
+        showToast(
+            "Нельзя удалить последний набор"
+        );
+
+        return;
+
+    }
+
+
+    const set =
+        state.sets.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!set) {
+        return;
+    }
+
+
+    if (
+        !confirm(
+            'Удалить набор "' +
+            set.name +
+            '"?'
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    state.sets =
+        state.sets.filter(
+            item =>
+                item.id !== id
+        );
+
+
+    if (
+        state.currentSetId === id
+    ) {
+
+        state.currentSetId =
+            state.sets[0].id;
+
+    }
+
+
+    saveState();
+
+    renderSetsList();
+
+    render();
+
+}
+
+
+// ======================================================
+// УПРАВЛЕНИЕ КНОПКАМИ
+// ======================================================
+
+function openButtonManager() {
+
+    renderButtonManager();
+
+    openModal(
+        "buttonManagerModal"
+    );
+
+}
+
+
+function renderButtonManager() {
+
+    const container =
+        document.getElementById(
+            "buttonSettingsList"
+        );
+
+
+    const currentSet =
+        getCurrentSet();
+
+
+    container.innerHTML = "";
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    currentSet.buttons.forEach(
+        button => {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "button-setting";
+
+
+            const preview =
+                document.createElement(
+                    "div"
+                );
+
+
+            preview.className =
+                "button-preview";
+
+
+            preview.style.backgroundColor =
+                button.backgroundColor;
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+
+            name.className =
+                "button-setting-name";
+
+
+            name.textContent =
+                button.name;
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.className =
+                "small-button delete";
+
+
+            deleteButton.textContent =
+                "×";
+
+
+            deleteButton.onclick =
+                () => {
+
+                    deleteButtonFromSet(
+                        button.id
+                    );
+
+                };
+
+
+            row.appendChild(
+                preview
+            );
+
+
+            row.appendChild(
+                name
+            );
+
+
+            row.appendChild(
+                deleteButton
+            );
+
+
+            container.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// ДОБАВЛЕНИЕ КНОПКИ
+// ======================================================
+
+function addButton() {
+
+    document.getElementById(
+        "newButtonName"
+    ).value = "";
+
+
+    openModal(
+        "addButtonModal"
+    );
+
+}
+
+
+function saveNewButton() {
+
+    const currentSet =
+        getCurrentSet();
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    const name =
+        document.getElementById(
+            "newButtonName"
+        ).value.trim();
+
+
+    if (!name) {
+
+        showToast(
+            "Введите название кнопки"
+        );
+
+        return;
+
+    }
+
+
+    const backgroundColor =
+        document.getElementById(
+            "newButtonBackground"
+        ).value;
+
+
+    const textColor =
+        document.getElementById(
+            "newButtonTextColor"
+        ).value;
+
+
+    currentSet.buttons.push({
+
+        id:
+            "button_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2, 8),
+
+        name:
+            name,
+
+        backgroundColor:
+            backgroundColor,
+
+        textColor:
+            textColor,
+
+        count:
+            0
+
+    });
+
+
+    saveState();
+
+    render();
+
+    renderButtonManager();
+
+    closeModal(
+        "addButtonModal"
+    );
+
+
+    showToast(
+        "Кнопка добавлена"
+    );
+
+}
+
+
+// ======================================================
+// УДАЛЕНИЕ КНОПКИ
+// ======================================================
+
+function deleteButtonFromSet(id) {
+
+    const currentSet =
+        getCurrentSet();
+
+
+    if (!currentSet) {
+        return;
+    }
+
+
+    const button =
+        currentSet.buttons.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    if (
+        !confirm(
+            'Удалить кнопку "' +
+            button.name +
+            '"?'
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    currentSet.buttons =
+        currentSet.buttons.filter(
+            item =>
+                item.id !== id
+        );
+
+
+    saveState();
+
+    render();
+
+    renderButtonManager();
+
+
+    showToast(
+        "Кнопка удалена"
+    );
+
+}
+
+
+// ======================================================
+// EXPORT
+// ======================================================
+
+function generateExportText() {
+
+    const currentSet =
+        getCurrentSet();
+
+
+    if (!currentSet) {
+        return "";
+    }
+
+
+    return currentSet.buttons
+        .map(
+            button =>
+                button.name +
+                ": " +
+                button.count
+        )
+        .join("\n");
+
+}
+
+
+async function exportData() {
+
+    const text =
+        generateExportText();
+
+
+    if (!text) {
+
+        showToast(
+            "Нет данных для выгрузки"
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "exportText"
+    ).value = text;
+
+
+    openModal(
+        "exportModal"
+    );
+
+
+    await copyText(
+        text
+    );
+
+
+    showToast(
+        "Данные скопированы"
+    );
+
+}
+
+
+async function copyExport() {
+
+    const text =
+        document.getElementById(
+            "exportText"
+        ).value;
+
+
+    await copyText(
+        text
+    );
+
+
+    showToast(
+        "Скопировано в буфер обмена"
+    );
+
+}
+
+
+async function copyText(text) {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.log(
+            "Clipboard API недоступен",
+            error
+        );
+
+
+        // Резервный способ
+
+        const textarea =
+            document.createElement(
+                "textarea"
+            );
+
+
+        textarea.value =
+            text;
+
+
+        textarea.style.position =
+            "fixed";
+
+
+        textarea.style.left =
+            "-9999px";
+
+
+        document.body.appendChild(
+            textarea
+        );
+
+
+        textarea.focus();
+
+        textarea.select();
+
+
+        try {
+
+            document.execCommand(
+                "copy"
+            );
+
+        } catch (copyError) {
+
+            console.error(
+                copyError
+            );
+
+        }
+
+
+        document.body.removeChild(
+            textarea
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+// ======================================================
+// MODAL
+// ======================================================
+
+function openModal(id) {
+
+    document.getElementById(
+        id
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+function closeModal(id) {
+
+    document.getElementById(
+        id
+    ).classList.remove(
+        "active"
+    );
+
+}
+
+
+// ======================================================
+// TOAST
+// ======================================================
+
+let toastTimer = null;
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2000
+        );
+
+}
+
+
+// ======================================================
+// БЛОКИРОВКА DOUBLE-TAP ZOOM
+// ======================================================
+
+document.addEventListener(
+    "dblclick",
+    function(event) {
+
+        event.preventDefault();
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+// ======================================================
+// ЗАКРЫТИЕ MODAL ПО НАЖАТИЮ НА ФОН
+// ======================================================
+
+document.querySelectorAll(
+    ".modal"
+).forEach(
+    modal => {
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === modal
+                ) {
+
+                    modal.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+// ======================================================
+// ЗАПУСК
+// ======================================================
+
+saveState();
+
+render();
+
+</script>
+
+
+</body>
+
+</html>
